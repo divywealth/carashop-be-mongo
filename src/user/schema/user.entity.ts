@@ -1,14 +1,44 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { Document, Types } from 'mongoose';
-import { Post } from '../../post/schema/post.entity';
+import mongoose, { HydratedDocument, Types } from 'mongoose';
+
+export type UserDocument = HydratedDocument<User>
 
 @Schema()
-export class User extends Document {
-  @Prop() 
-  username: string;
+export class User {
+  @Prop({ type: mongoose.Schema.Types.ObjectId, auto: true})
+  _id: string;
 
-  @Prop({ type: [{ type: 'ObjectId', ref: 'Post' }] })
-  posts: Post[]; 
+  @Prop({
+    required: false,
+  })
+  firstName: string;
+
+  @Prop({
+    required: false,
+  })
+  lastName: string;
+
+  @Prop({
+    required: false,
+  })
+  email: string;
+
+  @Prop({
+    required: false,
+  })
+  phoneNo: string;
+
+  @Prop({
+    required: false,
+  })
+  password: string;
+
+  @Prop({ default: Date.now })
+  createdAt!: Date;
+
+  @Prop({ default: Date.now })
+  updatedAt!: Date;
+
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

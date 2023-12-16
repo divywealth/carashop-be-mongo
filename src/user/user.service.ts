@@ -11,37 +11,28 @@ export class UserService {
     @InjectModel(User.name)
     private readonly userModel: Model<User>,
   ) {}
-
-  create(createUserDto: CreateUserDto) {
+  
+  async findAll() {
     try {
-      const createdUser = new this.userModel(createUserDto);
-      return createdUser.save();
+      return await this.userModel
+        .find()
+        .populate({ path: 'posts', model: 'Post' })
+        .exec();
     } catch (error) {
+      console.error('Error finding all users:', error.message);
       throw error;
     }
   }
 
-  findAll() {
+  async findOne(id: string) {
     try {
-      return this.userModel.find().populate('posts').exec();
+      return await this.userModel
+        .findById(id)
+        .populate({ path: 'posts', model: 'Post' })
+        .exec();
     } catch (error) {
+      console.error('Error finding all users:', error.message);
       throw error;
     }
-  }
-
-  findOne(id: string) {
-    try {
-      return this.userModel.findById(id).populate('posts').exec();
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
   }
 }
