@@ -11,7 +11,7 @@ import { UpdatePassworDto } from './dto/update-password.dto';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from 'src/user/schema/user.entity';
-import mongoose from 'mongoose';
+import * as mongoose from 'mongoose';
 import { BadRequest } from 'src/Util/BadRequestResponse';
 import { UpdateUserDto } from 'src/user/dto/update-user.dto';
 import { VerificationService } from 'src/verification/verification.service';
@@ -24,9 +24,9 @@ import * as bcrypt from 'bcrypt';
 export class AuthenticationService {
   constructor(
     @InjectModel(User.name)
+    private readonly userModel: mongoose.Model<User>,
     @InjectModel(Verification.name)
     private readonly verificationModel: mongoose.Model<Verification>,
-    private readonly userModel: mongoose.Model<User>,
     private readonly verificationService: VerificationService,
     private readonly notificationService: NotificationService,
     private jwtService: JwtService,

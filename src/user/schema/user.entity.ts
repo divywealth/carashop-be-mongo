@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument, Types } from 'mongoose';
+import { Userproduct } from 'src/userproduct/entities/userproduct.entity';
 
 export type UserDocument = HydratedDocument<User>
 
@@ -39,6 +40,8 @@ export class User {
   @Prop({ default: Date.now })
   updatedAt!: Date;
 
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Userproduct' }]})
+  userProducts: Userproduct
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

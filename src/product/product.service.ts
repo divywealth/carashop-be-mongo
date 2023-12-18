@@ -5,6 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Product } from './entities/product.entity';
 import mongoose from 'mongoose';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { BadRequest } from 'src/Util/BadRequestResponse';
 
 @Injectable()
 export class ProductService {
@@ -36,11 +37,26 @@ export class ProductService {
     return await this.productModel.findById(id)
   }
 
-  update(id: string, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async update(id: string, updateProductDto: UpdateProductDto) {
+    const existingProduct = await this.productModel.findOne({id: id})
+    if (existingProduct) {
+      if (updateProductDto.file) {
+        const upload = await this.cloudinaryService.uploadImage(updateProductDto.file)
+        const updateFile = { img: upload.url }
+        return this.productModel.findOneAndUpdate({id: id}, updateFile)
+      }
+      return this.productModel.findOneAndUpdate({id: id}, updateProductDto)
+    } else {
+      throw BadRequest('Product was not found');
+    }
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} product`;
+  async remove(id: string) {
+    const existingProduct = await this.productModel.findOne({ id: id, });
+    if (existingProduct) {
+      return this.productModel.findOneAndDelete({ id: id });
+    } else {
+      throw BadRequest("Product wasn't found");
+    }
   }
 }
