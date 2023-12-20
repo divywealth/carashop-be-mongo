@@ -21,9 +21,9 @@ export class UserproductService {
       createUserproductDto.productId,
     );
     const existingUserProduct = this.userproductModel.findOne({
-      user: { id: user._id },
+      user: { _id: user._id },
       product: {
-        id: product._id,
+        _id: product._id,
       },
     });
     if (existingUserProduct) {
@@ -42,8 +42,8 @@ export class UserproductService {
     return this.userproductModel.find().populate('user', 'product').exec()
   }
 
-  findOne(id: string) {
-    const existingUserProduct = this.userproductModel.findOne({id: id }).populate('user', 'product').exec()
+  async findOne(id: string) {
+    const existingUserProduct = this.userproductModel.findById(id).populate('user', 'product').exec()
     if (existingUserProduct) {
       return existingUserProduct;
     } else {
@@ -52,7 +52,7 @@ export class UserproductService {
   }
 
   async findUserProducts(user: User): Promise<Userproduct[]> {
-    const existingUserProduct = await this.userproductModel.find({id: user._id},);
+    const existingUserProduct = await this.userproductModel.find({_id: user._id},);
     if (existingUserProduct) {
       return existingUserProduct;
     } else {

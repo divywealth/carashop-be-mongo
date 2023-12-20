@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
+import { Suborder } from 'src/suborder/entities/suborder.entity';
 import { Userproduct } from 'src/userproduct/entities/userproduct.entity';
 
 export type ProductDocument = HydratedDocument<Product>;
@@ -19,7 +20,7 @@ export class Product {
   img: string;
 
   @Prop({ required: true })
-  price: string;
+  price: number;
 
   @Prop({ default: Date.now })
   createdAt!: Date;
@@ -28,7 +29,11 @@ export class Product {
   updatedAt!: Date;
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Userproduct'}]})
-  userproducts: Userproduct;
+  userproducts: Userproduct[];
+
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Suborder'}]})
+  suborders: Suborder[];
+
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

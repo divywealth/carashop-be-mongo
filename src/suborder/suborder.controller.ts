@@ -3,13 +3,15 @@ import { SuborderService } from './suborder.service';
 import { CreateSuborderDto } from './dto/create-suborder.dto';
 import { UpdateSuborderDto } from './dto/update-suborder.dto';
 
-@Controller('suborder')
+@Controller({
+  version: '1'
+})
 export class SuborderController {
   constructor(private readonly suborderService: SuborderService) {}
 
-  @Post()
+  @Post('suborder')
   create(@Body() createSuborderDto: CreateSuborderDto) {
-    return this.suborderService.create(createSuborderDto);
+    //return this.suborderService.create(createSuborderDto);
   }
 
   @Get()
@@ -20,6 +22,11 @@ export class SuborderController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.suborderService.findOne(+id);
+  }
+
+  @Get('order/products/:orderId')
+  getOrderProducts(@Param('orderId') orderId: string) {
+    return this.suborderService.findAllOrderProducts(orderId);
   }
 
   @Patch(':id')

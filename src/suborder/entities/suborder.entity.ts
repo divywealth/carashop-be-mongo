@@ -1,5 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
+import { Order } from 'src/order/entities/order.entity';
+import { Product } from 'src/product/entities/product.entity';
 
 export type SubOrderDocument = HydratedDocument<Suborder>;
 
@@ -16,6 +18,12 @@ export class Suborder {
 
   @Prop()
   size: string;
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Order'})
+  order: Order;
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Product'})
+  product: Product;
 
   @Prop({ default: Date.now })
   createdAt!: Date;

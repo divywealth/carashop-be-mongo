@@ -38,23 +38,23 @@ export class ProductService {
   }
 
   async update(id: string, updateProductDto: UpdateProductDto) {
-    const existingProduct = await this.productModel.findOne({id: id})
+    const existingProduct = await this.productModel.findOne({_id: id})
     if (existingProduct) {
       if (updateProductDto.file) {
         const upload = await this.cloudinaryService.uploadImage(updateProductDto.file)
         const updateFile = { img: upload.url }
-        return this.productModel.findOneAndUpdate({id: id}, updateFile)
+        return this.productModel.findOneAndUpdate({_id: id}, updateFile)
       }
-      return this.productModel.findOneAndUpdate({id: id}, updateProductDto)
+      return this.productModel.findOneAndUpdate({_id: id}, updateProductDto)
     } else {
       throw BadRequest('Product was not found');
     }
   }
 
   async remove(id: string) {
-    const existingProduct = await this.productModel.findOne({ id: id, });
+    const existingProduct = await this.productModel.findOne({ _id: id, });
     if (existingProduct) {
-      return this.productModel.findOneAndDelete({ id: id });
+      return this.productModel.findOneAndDelete({ _id: id });
     } else {
       throw BadRequest("Product wasn't found");
     }

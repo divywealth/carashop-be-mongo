@@ -15,7 +15,9 @@ import { Request } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
 
-@Controller('userproduct')
+@Controller({
+  version: '1'
+})
 export class UserproductController {
   constructor(
     private readonly userproductService: UserproductService,
@@ -97,7 +99,7 @@ export class UserproductController {
       const decodedToken = await this.jwtService.verifyAsync(token, {
         secret: process.env.JWT_SECRET,
       });
-      const userId = decodedToken.user.id;
+      const userId = decodedToken.user._id;
       const user = await this.userService.findOne(userId);
       return this.userproductService.removeUserProducts(user)
     } catch (error) {
