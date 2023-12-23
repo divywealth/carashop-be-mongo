@@ -16,8 +16,6 @@ export class UserService {
     try {
       return await this.userModel
         .find()
-        .populate({ path: 'posts', model: 'Post' })
-        .exec();
     } catch (error) {
       console.error('Error finding all users:', error.message);
       throw error;
@@ -28,8 +26,6 @@ export class UserService {
     try {
       return await this.userModel
         .findById(id)
-        .populate({ path: 'posts', model: 'Post' })
-        .exec();
     } catch (error) {
       console.error('Error finding all users:', error.message);
       throw error;

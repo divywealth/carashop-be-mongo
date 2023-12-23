@@ -6,7 +6,9 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { FileUploadDto } from './dto/file-upload-dto';
 
-@Controller('product')
+@Controller({
+  version: '1'
+})
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
   @ApiConsumes('multipart/form-data')
@@ -16,7 +18,8 @@ export class ProductController {
   })
 
   @UseInterceptors(FileInterceptor('file'))
-  @Post()
+
+  @Post('product')
   @UsePipes(ValidationPipe)
   create(@Body() body, @UploadedFile() file: Express.Multer.File) {
     try {
@@ -33,7 +36,7 @@ export class ProductController {
     }
   }
 
-  @Get()
+  @Get('products')
   findAll() {
     try {
       return this.productService.findAll();
@@ -42,7 +45,7 @@ export class ProductController {
     }
   }
 
-  @Get(':id')
+  @Get('product/:id')
   findOne(@Param('id') id: string) {
     try {
       return this.productService.findOne(id);
@@ -51,7 +54,7 @@ export class ProductController {
     }
   }
 
-  @Patch(':id')
+  @Patch('product/:id')
   @UseInterceptors(FileInterceptor('file'))
   update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto,  @UploadedFile() file: Express.Multer.File) {
     try {
@@ -61,7 +64,7 @@ export class ProductController {
     }
   }
 
-  @Delete(':id')
+  @Delete('product/:id')
   remove(@Param('id') id: string) {
     try {
       return this.productService.remove(id);

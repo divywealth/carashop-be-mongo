@@ -9,6 +9,7 @@ import {
   UsePipes,
   ValidationPipe,
   Req,
+  Put,
 } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
 import { CreateAuthenticationDto } from './dto/create-authentication.dto';
@@ -16,6 +17,7 @@ import { UpdateAuthenticationDto } from './dto/update-authentication.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import {
   ResetPasswordDto,
+  SendPasswordResetCode,
   VerifyPasswordCodeDto,
 } from './dto/reset-password.dto';
 import { Request } from 'express';
@@ -23,6 +25,7 @@ import { UpdatePassworDto } from './dto/update-password.dto';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
+import { UpdateUserDto } from 'src/user/dto/update-user.dto';
 
 @Controller({
   version: '1'
@@ -56,10 +59,10 @@ export class AuthenticationController {
 
   @Post('forgetpassword')
   @UsePipes(ValidationPipe)
-  sendResetPasswordCode(@Body() verifyPasswordCodeDto: VerifyPasswordCodeDto) {
+  sendResetPasswordCode(@Body() sendPasswordResetCode: SendPasswordResetCode) {
     try {
       return this.authenticationService.sendResetPassword(
-        verifyPasswordCodeDto.email,
+        sendPasswordResetCode.email,
       );
     } catch (error) {
       throw error.message;
@@ -78,7 +81,7 @@ export class AuthenticationController {
     }
   }
 
-  @Patch('reset-password')
+  @Put('reset-password')
   @UsePipes(ValidationPipe)
   async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
     try {
@@ -88,7 +91,7 @@ export class AuthenticationController {
     }
   }
 
-  @Patch('update-password')
+  @Put('change-password')
   @UsePipes(ValidationPipe)
   async updatePassword(
     @Body() updatePasswordDto: UpdatePassworDto,
@@ -113,9 +116,9 @@ export class AuthenticationController {
   @Patch('user/:id')
   update(
     @Param('id') id: string,
-    @Body() updateAuthenticationDto: UpdateAuthenticationDto,
+    @Body() updateUserDto: UpdateUserDto,
   ) {
-    return this.authenticationService.update(id, updateAuthenticationDto);
+    return this.authenticationService.update(id, updateUserDto);
   }
 
   @Delete('user/:id')

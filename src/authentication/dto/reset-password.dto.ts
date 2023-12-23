@@ -1,5 +1,10 @@
 import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
 
+export class SendPasswordResetCode {
+    @IsEmail()
+    email: string
+}
+
 export class VerifyPasswordCodeDto {
     @IsEmail()
     email: string;

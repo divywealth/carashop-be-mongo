@@ -118,9 +118,10 @@ export class AuthenticationService {
   async verifyResetPasswordCode(verifyPasswordCode: VerifyPasswordCodeDto) {
     try {
       const verify = await this.verificationModel.findOne({
-        user: { email: verifyPasswordCode.email },
+        'user.email': verifyPasswordCode.email,
         verificationCode: verifyPasswordCode.verificationCode,
       });
+      console.log(verify);
       if (!verify) {
         return BadRequest('invalid verification code');
       }
@@ -140,7 +141,9 @@ export class AuthenticationService {
           'Password is too short. Atleast 6 characters required',
         );
       }
-      const existingUser = await this.userModel.findOne({email: resetPasswordDto.email});
+      const existingUser = await this.userModel.findOne({
+        email: resetPasswordDto.email,
+      });
       if (!existingUser) {
         return BadRequest('user not found');
       }
@@ -149,9 +152,12 @@ export class AuthenticationService {
         resetPasswordDto.password,
         saltOrRounds,
       );
-      return await this.userModel.findOneAndUpdate({ email: resetPasswordDto.email}, {password: resetPasswordDto.password})
+      return await this.userModel.findOneAndUpdate(
+        { email: resetPasswordDto.email },
+        { password: password },
+      );
     } catch (error) {
-      throw error
+      throw error;
     }
   }
 
@@ -170,10 +176,13 @@ export class AuthenticationService {
         updatePasswordDto.newpassword,
         saltRounds,
       );
-      return this.userModel.findOneAndUpdate({ email: user.email },{ password: hashedPassword });
+      return this.userModel.findOneAndUpdate(
+        { email: user.email },
+        { password: hashedPassword },
+      );
     } catch (error) {
-      console.error(error)
-      throw error
+      console.error(error);
+      throw error;
     }
   }
 
@@ -181,7 +190,8 @@ export class AuthenticationService {
     try {
       return await this.userModel.findByIdAndUpdate(
         { _id: id },
-        { updateUserDto },
+        updateUserDto,
+        { new: true, runValidators: true },
       );
     } catch (error) {
       throw error;
