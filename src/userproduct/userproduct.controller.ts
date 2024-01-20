@@ -14,6 +14,7 @@ import { UpdateUserproductDto } from './dto/update-userproduct.dto';
 import { Request } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
+import { DeleteResult } from 'mongodb';
 
 @Controller({
   version: '1'
@@ -25,7 +26,7 @@ export class UserproductController {
     private jwtService: JwtService,
   ) {}
 
-  @Post()
+  @Post('userproduct')
   async create(
     @Body() createUserproductDto: CreateUserproductDto,
     @Req() request: Request,
@@ -43,7 +44,7 @@ export class UserproductController {
     }
   }
 
-  @Get()
+  @Get('userproducts')
   findAll() {
     try {
       return this.userproductService.findAll();
@@ -73,6 +74,7 @@ export class UserproductController {
       });
       const newdecodeToken = decodedToken.user._id;
       userId = newdecodeToken;
+      console.log(userId)
       const user = await this.userService.findOne(newdecodeToken);
       return this.userproductService.findUserProducts(user)
     } catch (error) {
@@ -93,7 +95,7 @@ export class UserproductController {
   }
 
   @Delete('userproducts')
-  async removeUserProducts(@Req() request: Request) {
+  async removeUserProducts(@Req() request: Request): Promise<DeleteResult> {
     try {
       const token = request.headers.authorization.replace('Bearer ', '');
       const decodedToken = await this.jwtService.verifyAsync(token, {

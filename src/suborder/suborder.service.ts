@@ -52,7 +52,7 @@ export class SuborderService {
   async findAllOrderProducts(orderId: string) {
     try {
       const existingOrderProducts = await this.suborderModel.find({
-        order: { _id: orderId },
+        order: orderId,
       }).populate('product', 'order');
       if (existingOrderProducts) {
         return existingOrderProducts

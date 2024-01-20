@@ -29,7 +29,7 @@ export class AddressService {
 
   async findOne(id: string) {
     try {
-      const existingAddress = await this.addressModel.findById({id: id})
+      const existingAddress = await this.addressModel.findById({_id: id})
       if (existingAddress) {
         return existingAddress
       }

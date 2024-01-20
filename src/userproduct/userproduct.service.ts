@@ -20,11 +20,9 @@ export class UserproductService {
     const product = await this.productService.findOne(
       createUserproductDto.productId,
     );
-    const existingUserProduct = this.userproductModel.findOne({
-      user: { _id: user._id },
-      product: {
-        _id: product._id,
-      },
+    const existingUserProduct = await this.userproductModel.findOne({
+      user: user._id,
+      product: product._id,
     });
     if (existingUserProduct) {
       throw BadRequest('User chosen product already');
@@ -35,15 +33,18 @@ export class UserproductService {
       size: createUserproductDto.size,
       quantity: createUserproductDto.quantity,
     });
-    return createUserProduct.save()
+    return createUserProduct.save();
   }
 
   async findAll() {
-    return this.userproductModel.find().populate('user', 'product').exec()
+    return this.userproductModel.find().populate('user', 'product').exec();
   }
 
   async findOne(id: string) {
-    const existingUserProduct = this.userproductModel.findById(id).populate('user', 'product').exec()
+    const existingUserProduct = this.userproductModel
+      .findById(id)
+      .populate('user', 'product')
+      .exec();
     if (existingUserProduct) {
       return existingUserProduct;
     } else {
@@ -52,8 +53,10 @@ export class UserproductService {
   }
 
   async findUserProducts(user: User): Promise<Userproduct[]> {
-    const existingUserProduct = await this.userproductModel.find({_id: user._id},);
-    if (existingUserProduct) {
+    const existingUserProduct = await this.userproductModel.find({
+      user: user._id,
+    });
+    if (existingUserProduct.length > 0) {
       return existingUserProduct;
     } else {
       throw BadRequest('user not found');
@@ -65,14 +68,17 @@ export class UserproductService {
   }
 
   async remove(id: string) {
-    return await this.userproductModel.findByIdAndDelete(id)
+    return await this.userproductModel.findByIdAndDelete(id);
   }
 
   async removeUserProducts(user: User) {
-    const userproduct = await this.userproductModel.findByIdAndDelete(user._id)
+    const userproduct = await this.userproductModel.deleteMany({
+      user: user._id,
+    });
     if (userproduct) {
-      return userproduct
+      return userproduct;
     }
-    throw BadRequest('No product for this user')
+
+    throw BadRequest('No product for this user');
   }
 }

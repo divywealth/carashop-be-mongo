@@ -21,7 +21,9 @@ import { AddressService } from 'src/address/address.service';
 import { Userproduct } from 'src/userproduct/entities/userproduct.entity';
 import { BadRequest } from 'src/Util/BadRequestResponse';
 
-@Controller('order')
+@Controller({
+  version: '1',
+})
 export class OrderController {
   constructor(
     private readonly orderService: OrderService,
@@ -33,7 +35,7 @@ export class OrderController {
     private readonly addressService: AddressService,
   ) {}
 
-  @Post()
+  @Post('order')
   async create(
     @Body() createOrderDto: CreateOrderDto,
     @Req() request: Request,
@@ -48,7 +50,7 @@ export class OrderController {
       const existingUserProducts: Userproduct[] =
         await this.userProductService.findUserProducts(user);
       if (existingUserProducts.length == 0) {
-        return BadRequest("user doesn't have any product")
+        return BadRequest("user doesn't have any product");
       }
       const deleteUserProduct = await this.userProductService.removeUserProducts(user);
       const savedAddress = await this.addressService.create(
@@ -58,7 +60,7 @@ export class OrderController {
       const savedOrder = await this.orderService.create(
         createOrderDto,
         user,
-        address, 
+        address,
       );
       const order = await this.orderService.findOne(savedOrder._id);
       for (let i = 0; i < existingUserProducts.length; i++) {
@@ -72,10 +74,10 @@ export class OrderController {
           product.price,
           existingUserProducts[i].size,
         );
-        const savedSubOrderProducts =
-          await this.suborderService.findAllOrderProducts(savedOrder.id);
-        return savedSubOrderProducts;
       }
+      const savedSubOrderProducts =
+        await this.suborderService.findAllOrderProducts(savedOrder._id);
+        return savedSubOrderProducts;
     } catch (error) {
       throw error.message;
     }
