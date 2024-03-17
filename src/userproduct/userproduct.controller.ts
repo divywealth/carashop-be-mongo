@@ -33,9 +33,11 @@ export class UserproductController {
   ) {
     try {
       const token = request.headers.authorization.replace('Bearer ', '');
+      console.log(token)
       const decodedToken = await this.jwtService.verifyAsync(token, {
         secret: process.env.JWT_SECRET,
       });
+      console.log(decodedToken)
       const userId = decodedToken.user._id;
       const user = await this.userService.findOne(userId);
       return this.userproductService.create(createUserproductDto, user);
@@ -78,7 +80,7 @@ export class UserproductController {
       const user = await this.userService.findOne(newdecodeToken);
       return this.userproductService.findUserProducts(user)
     } catch (error) {
-      
+      throw error.message;
     }
   }
 

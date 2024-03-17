@@ -53,8 +53,8 @@ export class SuborderService {
     try {
       const existingOrderProducts = await this.suborderModel.find({
         order: orderId,
-      }).populate('product', 'order');
-      if (existingOrderProducts) {
+      }).populate('product');
+      if (existingOrderProducts.length > 0) {
         return existingOrderProducts
       } else {
         return BadRequest("orderId dosen't exist")

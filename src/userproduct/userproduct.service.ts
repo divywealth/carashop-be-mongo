@@ -53,10 +53,15 @@ export class UserproductService {
   }
 
   async findUserProducts(user: User): Promise<Userproduct[]> {
-    const existingUserProduct = await this.userproductModel.find({
-      user: user._id,
-    });
+    const existingUserProduct = await this.userproductModel
+      .find({
+        user: user._id,
+      })
+      .populate('product')
+      .exec();
+      console.log(existingUserProduct);
     if (existingUserProduct.length > 0) {
+      console.log(existingUserProduct);
       return existingUserProduct;
     } else {
       throw BadRequest('user not found');

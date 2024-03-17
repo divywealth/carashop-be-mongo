@@ -18,12 +18,12 @@ export class OrderService {
 
   async create(createOrderDto: CreateOrderDto, user: User, address: Address) {
     try {
-      const creatOrder = new this.orderModel({
+      const createOrder = new this.orderModel({
         user: user,
         status: createOrderDto.status,
         address: address,
       })
-      return await creatOrder.save()
+      return await createOrder.save()
     } catch (error) {
       throw error;
     }
