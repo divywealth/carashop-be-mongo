@@ -64,7 +64,7 @@ export class UserproductService {
       console.log(existingUserProduct);
       return existingUserProduct;
     } else {
-      throw BadRequest('user not found');
+      return [];
     }
   }
 
