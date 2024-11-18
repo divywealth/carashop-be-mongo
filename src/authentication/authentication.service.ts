@@ -35,7 +35,7 @@ export class AuthenticationService {
   async create(createUserDto: CreateUserDto) {
     try {
       const existingUser = await this.userModel.findOne({
-        email: createUserDto.email,
+        phoneNo: createUserDto.phoneNo,
       });
       if (existingUser) {
         return BadRequest('user already exists');
@@ -66,7 +66,7 @@ export class AuthenticationService {
   async loginUser(loginUserDto: LoginUserDto) {
     try {
       if (!loginUserDto.phoneNo || !loginUserDto.password) {
-        throw BadRequest('email and password required');
+        throw BadRequest('phoneNo and password required');
       }
       const existingUser = await this.userModel.findOne({
         phoneNo: loginUserDto.phoneNo,

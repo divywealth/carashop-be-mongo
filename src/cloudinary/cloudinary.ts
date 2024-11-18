@@ -1,6 +1,7 @@
 
 import { ConfigService } from '@nestjs/config';
 import { v2 } from 'cloudinary';
+
 const CLOUDINARY = 'Cloudinary';
 const configService = new ConfigService();
 
